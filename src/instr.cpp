@@ -11,6 +11,14 @@ static ITRVNAPtr pNWA;   // Pointer to COM object of TRVNA.exe
 static CComVariant Data; // Variable for measurement data
 static CComVariant Freq; // Variable for Frequency points
 
+int instr_list(json_t *obj){
+   json_object_set_new(obj, "instr", json_integer(INSTR_DEV_LIST));
+   json_t *list = json_array();
+   json_array_append_new(list, json_string("Copper Mountain"));
+   json_object_set_new(obj, "list", list);
+   return 1;
+}
+
 int instr_connect(json_t *obj)
 {
   char err_buff[100] = {'\0'};
