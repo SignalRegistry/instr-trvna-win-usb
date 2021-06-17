@@ -7,7 +7,6 @@ enum INSTR_MSG_TYPE
 {
   BLANK,
   INSTR_CONN_READY,
-  INSTR_DEV_LIST,
   INSTR_DEV_READY,
   INSTR_DEV_INFO,
   INSTR_DEV_CONF,
@@ -28,7 +27,6 @@ static int channel_count = 1;
 static int active_trace = 1;
 static int trace_count = 1;
 
-int instr_list(json_t *obj);
 int instr_connect(json_t *obj);
 int instr_info(json_t *obj);
 int instr_conf(json_t *obj);

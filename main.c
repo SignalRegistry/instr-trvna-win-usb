@@ -172,16 +172,16 @@ int run_websocket_client(const char *host,
   /* INSTR_CONN_READY */
   /* First seek for local installed instrument server */
   LOGGER("[INFO] Searching for local server ... ");
-  conn = mg_connect_websocket_client(LOCALHOST,
-                                     LOCALPORT,
-                                     secure,
-                                     err_buf,
-                                     sizeof(err_buf),
-                                     path,
-                                     NULL,
-                                     websocket_client_data_handler,
-                                     websocket_client_close_handler,
-                                     NULL);
+  // conn = mg_connect_websocket_client(LOCALHOST,
+  //                                    LOCALPORT,
+  //                                    secure,
+  //                                    err_buf,
+  //                                    sizeof(err_buf),
+  //                                    path,
+  //                                    NULL,
+  //                                    websocket_client_data_handler,
+  //                                    websocket_client_close_handler,
+  //                                    NULL);
   if (conn == NULL)
   {
     LOGGER("Not found.\n");
@@ -207,18 +207,6 @@ int run_websocket_client(const char *host,
   LOGGER("OKAY.\n");
   CLOSENOW = 0;
   json_object_set(obj, "instr", json_integer(INSTR_CONN_READY));
-  buff = json_dumps(obj, JSON_COMPACT);
-  mg_websocket_client_write(conn, MG_WEBSOCKET_OPCODE_TEXT, buff, strlen(buff) + 1);
-  json_object_clear(obj);
-  free(buff);
-
-  /* INSTR_DEV_LIST */
-  if (!instr_list(obj))
-  {
-    LOGGER("[ERROR] %s\n", json_string_value(json_object_get(obj, "err")));
-    EXITNOW = CLOSENOW = 1;
-    return 0;
-  }
   buff = json_dumps(obj, JSON_COMPACT);
   mg_websocket_client_write(conn, MG_WEBSOCKET_OPCODE_TEXT, buff, strlen(buff) + 1);
   json_object_clear(obj);
