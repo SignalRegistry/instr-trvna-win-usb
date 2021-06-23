@@ -7,6 +7,7 @@
               "//                    Version: 2.0.0                                      //\n" \
               "////////////////////////////////////////////////////////////////////////////\n"
 
+#define VERSION "2.0.0"
 #define DEBUG_LOG
 
 #define LOCALHOST "localhost"
@@ -207,6 +208,7 @@ int run_websocket_client(const char *host,
   LOGGER("OKAY.\n");
   CLOSENOW = 0;
   json_object_set(obj, "instr", json_integer(INSTR_CONN_READY));
+  json_object_set(obj, "version", json_string(VERSION));
   buff = json_dumps(obj, JSON_COMPACT);
   mg_websocket_client_write(conn, MG_WEBSOCKET_OPCODE_TEXT, buff, strlen(buff) + 1);
   json_object_clear(obj);
