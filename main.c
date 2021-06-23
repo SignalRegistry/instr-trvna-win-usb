@@ -173,16 +173,16 @@ int run_websocket_client(const char *host,
   /* INSTR_CONN_READY */
   /* First seek for local installed instrument server */
   LOGGER("[INFO] Searching for local server ... ");
-  // conn = mg_connect_websocket_client(LOCALHOST,
-  //                                    LOCALPORT,
-  //                                    secure,
-  //                                    err_buf,
-  //                                    sizeof(err_buf),
-  //                                    path,
-  //                                    NULL,
-  //                                    websocket_client_data_handler,
-  //                                    websocket_client_close_handler,
-  //                                    NULL);
+  conn = mg_connect_websocket_client(LOCALHOST,
+                                     LOCALPORT,
+                                     secure,
+                                     err_buf,
+                                     sizeof(err_buf),
+                                     path,
+                                     NULL,
+                                     websocket_client_data_handler,
+                                     websocket_client_close_handler,
+                                     NULL);
   if (conn == NULL)
   {
     LOGGER("Not found.\n");
