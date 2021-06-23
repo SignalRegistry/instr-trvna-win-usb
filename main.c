@@ -4,7 +4,7 @@
               "//      Instrument Client for Cooper Mountain TRVNA Series                //\n" \
               "//             https://instr.signalregistry.net                           //\n" \
               "//                 Author: Huseyin YIGIT                                  //\n" \
-              "//                    Version: 1.0.0                                      //\n" \
+              "//                    Version: 2.0.0                                      //\n" \
               "////////////////////////////////////////////////////////////////////////////\n"
 
 #define DEBUG_LOG
