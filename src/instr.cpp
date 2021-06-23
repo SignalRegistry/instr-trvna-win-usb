@@ -59,7 +59,6 @@ int instr_info(json_t *obj)
   json_object_set_new(obj, "instr", json_integer(INSTR_DEV_INFO));
   json_object_set_new(obj, "mode", json_integer(INSTR_MODE_VNA));
   json_object_set_new(obj, "id", json_string((char *)pNWA->NAME));
-  json_object_set_new(obj, "ui", json_string(instr_ui));
   return 1;
 }
 
@@ -195,6 +194,165 @@ int instr_conf(json_t *obj)
   json_object_set_new(obj, "CALC:PAR:COUN", json_integer(trace_count));
   active_trace = pNWA->SCPI->SERVice->CHANnel[active_channel]->TRACe->ACTive;
   json_object_set_new(obj, "CALC:PAR:SEL", json_integer(active_trace));
+
+  // UI
+  json_t *cat, *subcat, *cats, *subcats, *options, *parameters;
+  cats = json_array();
+  // Stimulus
+  cat = json_object();
+  json_object_set_new(cat, "name", json_string("STIMULUS"));
+  subcats = json_array();
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Start"));
+  json_object_set_new(subcat, "scpi", json_string("SENS:FREQ:STAR"));
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Stop"));
+  json_object_set_new(subcat, "scpi", json_string("SENS:FREQ:STOP"));
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Points"));
+  json_object_set_new(subcat, "scpi", json_string("SENS:SWE:POIN"));
+  json_array_append_new(subcats, subcat);
+
+  json_object_set_new(cat, "items", subcats);
+  json_array_append_new(cats, cat);
+  // Response
+  cat = json_object();
+  json_object_set_new(cat, "name", json_string("RESPONSE"));
+  subcats = json_array();
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Measurement"));
+  json_object_set_new(subcat, "scpi", json_string("CALC:PAR:DEF"));
+  options = json_array();
+  json_array_append_new(options, json_string("S11"));
+  json_array_append_new(options, json_string("S21"));
+  json_array_append_new(options, json_string("A"));
+  json_array_append_new(options, json_string("B"));
+  json_array_append_new(options, json_string("R"));
+  json_object_set_new(subcat, "options", options);
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Format"));
+  json_object_set_new(subcat, "scpi", json_string("CALC:FORM"));
+  options = json_array();
+  json_array_append_new(options, json_string("MLOG"));
+  json_array_append_new(options, json_string("PHAS"));
+  json_array_append_new(options, json_string("GDEL"));
+  json_array_append_new(options, json_string("MLIN"));
+  json_array_append_new(options, json_string("SWR"));
+  json_array_append_new(options, json_string("REAL"));
+  json_array_append_new(options, json_string("IMAG"));
+  json_array_append_new(options, json_string("UPH"));
+  json_object_set_new(subcat, "options", options);
+  json_array_append_new(subcats, subcat);
+
+  json_object_set_new(cat, "items", subcats);
+  json_array_append_new(cats, cat);
+  // Scale
+  cat = json_object();
+  json_object_set_new(cat, "name", json_string("SCALE"));
+  subcats = json_array();
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Scale"));
+  json_object_set_new(subcat, "scpi", json_string("DISP:WIND:TRAC:Y:SCAL:PDIV"));
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Ref Value"));
+  json_object_set_new(subcat, "scpi", json_string("DISP:WIND:TRAC:Y:SCAL:RLEV"));
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Ref Position"));
+  json_object_set_new(subcat, "scpi", json_string("DISP:WIND:TRAC:Y:SCAL:RPOS"));
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Divisions"));
+  json_object_set_new(subcat, "scpi", json_string("DISP:WIND:Y:SCAL:DIV"));
+  parameters = json_object();
+  json_object_set_new(parameters, "min", json_integer(4));
+  json_object_set_new(parameters, "max", json_integer(20));
+  json_object_set_new(parameters, "step", json_integer(2));
+  json_object_set_new(subcat, "number", parameters);
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Auto Scale"));
+  json_object_set_new(subcat, "scpi", json_string("DISP:WIND:TRAC:Y:SCAL:AUTO"));
+  json_object_set_new(subcat, "button", json_integer(1));
+  json_array_append_new(subcats, subcat);
+
+  json_object_set_new(cat, "items", subcats);
+  json_array_append_new(cats, cat);
+  // Channels
+  cat = json_object();
+  json_object_set_new(cat, "name", json_string("CHANNELS"));
+  subcats = json_array();
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Channel Count"));
+  json_object_set_new(subcat, "scpi", json_string("CALC"));
+  options = json_array();
+  json_array_append_new(options, json_integer(1));
+  json_array_append_new(options, json_integer(2));
+  json_array_append_new(options, json_integer(3));
+  json_array_append_new(options, json_integer(4));
+  json_array_append_new(options, json_integer(6));
+  json_array_append_new(options, json_integer(8));
+  json_array_append_new(options, json_integer(9));
+  json_object_set_new(subcat, "options", options);
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Active Channel"));
+  json_object_set_new(subcat, "scpi", json_string("CALC:ACT"));
+  parameters = json_object();
+  json_object_set_new(parameters, "min", json_integer(1));
+  json_object_set_new(parameters, "max", json_integer(9));
+  json_object_set_new(parameters, "step", json_integer(1));
+  json_object_set_new(subcat, "number", parameters);
+  json_array_append_new(subcats, subcat);
+
+  json_object_set_new(cat, "items", subcats);
+  json_array_append_new(cats, cat);
+  // Traces
+  cat = json_object();
+  json_object_set_new(cat, "name", json_string("TRACES"));
+  subcats = json_array();
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Trace Count"));
+  json_object_set_new(subcat, "scpi", json_string("CALC:PAR:COUN"));
+  parameters = json_object();
+  json_object_set_new(parameters, "min", json_integer(1));
+  json_object_set_new(parameters, "max", json_integer(8));
+  json_object_set_new(parameters, "step", json_integer(1));
+  json_object_set_new(subcat, "number", parameters);
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Active Trace"));
+  json_object_set_new(subcat, "scpi", json_string("CALC:PAR:SEL"));
+  parameters = json_object();
+  json_object_set_new(parameters, "min", json_integer(1));
+  json_object_set_new(parameters, "max", json_integer(8));
+  json_object_set_new(parameters, "step", json_integer(1));
+  json_object_set_new(subcat, "number", parameters);
+  json_array_append_new(subcats, subcat);
+
+  json_object_set_new(cat, "items", subcats);
+  json_array_append_new(cats, cat);
+
+  json_object_set_new(obj, "ui", cats);
+
   return 1;
 }
 
