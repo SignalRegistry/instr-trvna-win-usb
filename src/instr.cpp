@@ -80,6 +80,8 @@ int instr_conf(json_t *obj)
           pNWA->SCPI->SENSe[active_channel]->FREQuency->STOP = atof(json_string_value(value));
         else if (strcmp(key, "SENS:SWE:POIN") == 0)
           pNWA->SCPI->SENSe[active_channel]->SWEep->POINts = atol(json_string_value(value));
+        else if (strcmp(key, "SENS:BAND:RES") == 0)
+          pNWA->SCPI->SENSe[active_channel]->BANDwidth->RESolution = atof(json_string_value(value));
         // Response
         else if (strcmp(key, "CALC:FORM") == 0)
           pNWA->SCPI->CALCulate[active_channel]->SELected->FORMat = json_string_value(value);
@@ -164,6 +166,7 @@ int instr_conf(json_t *obj)
   json_object_set_new(obj, "SENS:FREQ:STAR", json_real(pNWA->SCPI->SENSe[active_channel]->FREQuency->STARt));
   json_object_set_new(obj, "SENS:FREQ:STOP", json_real(pNWA->SCPI->SENSe[active_channel]->FREQuency->STOP));
   json_object_set_new(obj, "SENS:SWE:POIN", json_integer(pNWA->SCPI->SENSe[active_channel]->SWEep->POINts));
+  json_object_set_new(obj, "SENS:BAND:RES", json_real(pNWA->SCPI->SENSe[active_channel]->BANDwidth->RESolution));
   // Response
   json_object_set_new(obj, "CALC:FORM", json_string(pNWA->SCPI->CALCulate[active_channel]->SELected->FORMat));
   json_object_set_new(obj, "CALC:PAR:DEF", json_string(pNWA->SCPI->CALCulate[active_channel]->PARameter[active_trace]->DEFine));
@@ -216,6 +219,21 @@ int instr_conf(json_t *obj)
   subcat = json_object();
   json_object_set_new(subcat, "name", json_string("Points"));
   json_object_set_new(subcat, "scpi", json_string("SENS:SWE:POIN"));
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("IF Bandwidth"));
+  json_object_set_new(subcat, "scpi", json_string("SENS:BAND:RES"));
+  options = json_array();
+  json_array_append_new(options, json_string("30000"));
+  json_array_append_new(options, json_string("10000"));
+  json_array_append_new(options, json_string("3000"));
+  json_array_append_new(options, json_string("1000"));
+  json_array_append_new(options, json_string("300"));
+  json_array_append_new(options, json_string("100"));
+  json_array_append_new(options, json_string("10"));
+  json_array_append_new(options, json_string("30"));
+  json_object_set_new(subcat, "options", options);
   json_array_append_new(subcats, subcat);
 
   json_object_set_new(cat, "items", subcats);

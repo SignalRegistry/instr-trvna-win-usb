@@ -189,7 +189,7 @@ int run_websocket_client(const char *host,
   }
   if (conn == NULL)
   {
-    LOCAL_HOST_EXIST = 0;
+    LOCALHOST_EXIST = 0;
     LOGGER("Not found.\n");
     /* Connect to the given WS or WSS (WS secure) server */
     LOGGER("[INFO] Connecting to remote server %s ... ", host);
