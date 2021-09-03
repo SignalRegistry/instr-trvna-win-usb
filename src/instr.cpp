@@ -87,6 +87,11 @@ int instr_conf(json_t *obj)
           pNWA->SCPI->CALCulate[active_channel]->SELected->FORMat = json_string_value(value);
         else if (strcmp(key, "CALC:PAR:DEF") == 0)
           pNWA->SCPI->CALCulate[active_channel]->PARameter[active_trace]->DEFine = json_string_value(value);
+        else if (strcmp(key, "SENS:AVER:COUN") == 0)
+          pNWA->SCPI->SENSe[active_channel]->AVERage->COUNt = atol(json_string_value(value));
+        else if (strcmp(key, "SENS:SMO:APER") == 0)
+          pNWA->SCPI->CALCulate[active_channel]->SELected->SMOothing->APERture = atof(json_string_value(value));
+
         // Scale
         else if (strcmp(key, "DISP:WIND:TRAC:Y:SCAL:PDIV") == 0)
           pNWA->SCPI->DISPlay->WINDow[active_channel]->TRACe[active_trace]->Y->SCALe->PDIVision = atof(json_string_value(value));
@@ -170,6 +175,8 @@ int instr_conf(json_t *obj)
   // Response
   json_object_set_new(obj, "CALC:FORM", json_string(pNWA->SCPI->CALCulate[active_channel]->SELected->FORMat));
   json_object_set_new(obj, "CALC:PAR:DEF", json_string(pNWA->SCPI->CALCulate[active_channel]->PARameter[active_trace]->DEFine));
+  json_object_set_new(obj, "SENS:AVER:COUN", json_integer(pNWA->SCPI->SENSe[active_channel]->AVERage->COUNt));
+  json_object_set_new(obj, "SENS:SMO:APER", json_real(pNWA->SCPI->CALCulate[active_channel]->SELected->SMOothing->APERture));
   // Scale
   json_object_set_new(obj, "DISP:WIND:TRAC:Y:SCAL:PDIV", json_real(pNWA->SCPI->DISPlay->WINDow[active_channel]->TRACe[active_trace]->Y->SCALe->PDIVision));
   json_object_set_new(obj, "DISP:WIND:TRAC:Y:SCAL:RLEV", json_real(pNWA->SCPI->DISPlay->WINDow[active_channel]->TRACe[active_trace]->Y->SCALe->RLEVel));
@@ -268,6 +275,26 @@ int instr_conf(json_t *obj)
   json_array_append_new(options, json_string("IMAG"));
   json_array_append_new(options, json_string("UPH"));
   json_object_set_new(subcat, "options", options);
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Averaging"));
+  json_object_set_new(subcat, "scpi", json_string("SENS:AVER:COUN"));
+  parameters = json_object();
+  json_object_set_new(parameters, "min", json_integer(1));
+  json_object_set_new(parameters, "max", json_integer(999));
+  json_object_set_new(parameters, "step", json_integer(1));
+  json_object_set_new(subcat, "number", parameters);
+  json_array_append_new(subcats, subcat);
+
+  subcat = json_object();
+  json_object_set_new(subcat, "name", json_string("Smoothing"));
+  json_object_set_new(subcat, "scpi", json_string("SENS:SMO:APER"));
+   parameters = json_object();
+  json_object_set_new(parameters, "min", json_real(1));
+  json_object_set_new(parameters, "max", json_real(20));
+  json_object_set_new(parameters, "step", json_real(0.1));
+  json_object_set_new(subcat, "number", parameters);
   json_array_append_new(subcats, subcat);
 
   json_object_set_new(cat, "items", subcats);
