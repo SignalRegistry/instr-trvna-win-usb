@@ -85,7 +85,7 @@ int instr_conf(json_t *obj)
         // Response
         else if (strcmp(key, "CALC:FORM") == 0)
           pNWA->SCPI->CALCulate[active_channel]->SELected->FORMat = json_string_value(value);
-        else if (strcmp(key, "CALC:PAR:DEF") == 0)
+        else if (strcmp(key, "CALC:PAR") == 0)
           pNWA->SCPI->CALCulate[active_channel]->PARameter[active_trace]->DEFine = json_string_value(value);
         else if (strcmp(key, "SENS:AVER:COUN") == 0)
           pNWA->SCPI->SENSe[active_channel]->AVERage->COUNt = atol(json_string_value(value));
@@ -174,7 +174,7 @@ int instr_conf(json_t *obj)
   json_object_set_new(obj, "SENS:BAND:RES", json_real(pNWA->SCPI->SENSe[active_channel]->BANDwidth->RESolution));
   // Response
   json_object_set_new(obj, "CALC:FORM", json_string(pNWA->SCPI->CALCulate[active_channel]->SELected->FORMat));
-  json_object_set_new(obj, "CALC:PAR:DEF", json_string(pNWA->SCPI->CALCulate[active_channel]->PARameter[active_trace]->DEFine));
+  json_object_set_new(obj, "CALC:PAR", json_string(pNWA->SCPI->CALCulate[active_channel]->PARameter[active_trace]->DEFine));
   json_object_set_new(obj, "SENS:AVER:COUN", json_integer(pNWA->SCPI->SENSe[active_channel]->AVERage->COUNt));
   json_object_set_new(obj, "SENS:SMO:APER", json_real(pNWA->SCPI->CALCulate[active_channel]->SELected->SMOothing->APERture));
   // Scale
@@ -252,7 +252,7 @@ int instr_conf(json_t *obj)
 
   subcat = json_object();
   json_object_set_new(subcat, "name", json_string("Measurement"));
-  json_object_set_new(subcat, "scpi", json_string("CALC:PAR:DEF"));
+  json_object_set_new(subcat, "scpi", json_string("CALC:PAR"));
   options = json_array();
   json_array_append_new(options, json_string("S11"));
   json_array_append_new(options, json_string("S21"));
